@@ -23,7 +23,8 @@
 				containerActive: pluginName + '_state_active',
 				currentActive: pluginName + '-current_state_active',
 				optionsActive: pluginName + '-options_state_active',
-				optionActive: pluginName + '-option_state_active'
+				optionActive: pluginName + '-option_state_active',
+				optionDisabled: pluginName + '-option_state_disabled'
 			},
 			plugins: []
 		},
@@ -47,6 +48,12 @@
 			classes = $[pluginName].options.classes,
 			$selectedOption = _this.$jelectOptions.find(selectors.option + '[data-val="' + value + '"]'),
 			currentText = $selectedOption.text();
+
+
+		if ($selectedOption.hasClass(classes.optionDisabled)) {
+			console.error('Option {' + value + '} is disabled');
+			return false;
+		}
 
 		$selectedOption
 			.addClass(classes.optionActive)
@@ -138,7 +145,12 @@
 
 		// Select an option
 		_this.$jelectOptions.on('click ' + pluginName + '.changeOption', selectors.option, function () {
-			 var value = $(this).data('val');
+
+			var $this = $(this),
+				value = $this.data('val');
+
+			if ($this.hasClass(classes.optionDisabled)) return false;
+
 			_setValue.call(_this, value);
 			_this.$jelectOptions.removeClass(classes.optionsActive);
 		});
@@ -176,6 +188,35 @@
 	Jelect.prototype.setValue = function (value) {
 		if (typeof value !== 'undefined') {
 			_setValue.call(this, value);
+		}
+		return this;
+	};
+
+	Jelect.prototype.disable = function (value, needDisable) {
+		var _this = this,
+			jelect = $[pluginName],
+			selectors = jelect.selectors,
+			classes = jelect.options.classes,
+			$option;
+
+		if (
+			typeof value !== 'undefined' &&
+			typeof needDisable !== 'undefined'
+		) {
+			$option = _this.$jelectOptions
+						.find(selectors.option + '[data-val="' + value + '"]'),
+			$option.toggleClass(classes.optionDisabled, needDisable);
+
+
+			// if lockable options is selected
+			// then select of the first unlocked option
+			if (_this.$jelectCurrent.data('val') == value) {
+				var $firstEnableOption = _this.$jelectOptions
+											.find(selectors.option)
+											.not('.' + classes.optionDisabled)
+											.first();
+				_this.setValue($firstEnableOption.data('val'));
+			}
 		}
 		return this;
 	};

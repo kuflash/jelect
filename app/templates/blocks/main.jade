@@ -10,15 +10,20 @@ mixin jelect(obj)
 					type='text'
 				)
 
-				.jelect-current.js-jelect-current(tabindex=1 role='button')= option[0]
+				.jelect-current.js-jelect-current(
+					data-val=option[1]
+					tabindex=1,
+					role='button'
+				)= option[0]
 
 		.jelect-options.js-jelect-options(role='list-box')
 			.jelect-scroller.js-jelect-scroller
 				each option in obj.options
 					.jelect-option.js-jelect-option(
-						class=option[2] ? 'jelect-option_state_active' : ''
+						class=option[2] ? 'jelect-option_state_active' : '' 
+						class=option[3] ? 'jelect-option_state_disabled' : ''
 						data-val=option[1]
-						tabindex=1
+						tabindex=option[3] ? -1 : 1
 						role='option'
 					)= option[0]
 			.jelect-track
@@ -31,23 +36,23 @@ mixin jelect(obj)
 			inputId: 'jelectToolInput',
 			inputName: 'tool',
 			options: [
-				['gulp', 0, true],
-				['browser-sync', 1],
-				['del', 2],
-				['gulp-autoprefixer', 3],
-				['gulp-combine-media-queries', 4],
-				['gulp-concat', 5],
-				['gulp-csscomb', 6],
-				['gulp-imagemin', 7],
-				['gulp-jade', 8],
-				['gulp-jscs', 9],
-				['gulp-jshint', 10],
-				['gulp-minify-css', 11],
-				['gulp-prettify', 12],
-				['gulp-stylus', 13],
-				['gulp-uglify', 14],
-				['gulp.spritesmith', 15],
-				['rupture', 16]
+				['gulp', 0, false, false],
+				['browser-sync', 1, false],
+				['del', 2, false, true],
+				['gulp-autoprefixer', 3, true, false],
+				['gulp-combine-media-queries', 4, false],
+				['gulp-concat', 5, false],
+				['gulp-csscomb', 6, false],
+				['gulp-imagemin', 7, false],
+				['gulp-jade', 8, false],
+				['gulp-jscs', 9, false],
+				['gulp-jshint', 10, false],
+				['gulp-minify-css', 11, false],
+				['gulp-prettify', 12, false],
+				['gulp-stylus', 13, false],
+				['gulp-uglify', 14, false],
+				['gulp.spritesmith', 15, false],
+				['rupture', 16, false]
 			]
 		})
 

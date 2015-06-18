@@ -557,6 +557,19 @@ body {
 	background-color: #fff2b3;
 }
 
+.jelect-option_state_disabled {
+	cursor: default;
+	text-decoration: none;
+	background-color: #ccc;
+	opacity: .5;
+}
+
+.jelect-option_state_disabled:focus,
+.jelect-option_state_disabled:hover {
+	text-decoration: none;
+	background-color: #ccc;
+}
+
 .jelect-option:before {
 	position: absolute;
 	top: 0;
