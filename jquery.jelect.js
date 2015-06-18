@@ -174,7 +174,7 @@
 	};
 
 	Jelect.prototype.setValue = function (value) {
-		if (value) {
+		if (typeof value !== 'undefined') {
 			_setValue.call(this, value);
 		}
 		return this;
