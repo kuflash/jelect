@@ -29,6 +29,8 @@ $(function () {
 
 	$('#jelectTool2, #jelectTool3').jelect();
 
+	$('#jelectTool1').jelect('setValue', 2);
+
 	// $('#jelectTool').on('jelect.change', function (event, data) {
 	// 	console.log(data.text, data.val);
 	// });

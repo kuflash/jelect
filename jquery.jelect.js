@@ -13,7 +13,8 @@
 
 	var
 		Jelect,
-		pluginName = 'jelect';
+		pluginName = 'jelect',
+		_setValue;
 
 	$[pluginName] = {
 		version: '1.0.0',
@@ -38,6 +39,36 @@
 			ENTER: 13,
 			ESC: 27
 		}
+	};
+
+	_setValue = function (value) {
+		var _this = this,
+			selectors = $[pluginName].selectors,
+			classes = $[pluginName].options.classes,
+			$selectedOption = _this.$jelectOptions.find(selectors.option + '[data-val="' + value + '"]'),
+			currentText = $selectedOption.text();
+
+		$selectedOption
+			.addClass(classes.optionActive)
+			.siblings(selectors.option)
+			.removeClass(classes.optionActive);
+
+		_this.$jelect
+			.val(value)
+			.removeClass(classes.containerActive)
+			.trigger('jelect.change');
+
+		// Set a current text
+		_this.$jelectCurrent
+			.text(currentText)
+			.attr('data-val', value);
+
+		// Change the value of input and fire trigger `change`
+		_this.$jelectInput
+			.val(value)
+			.trigger('change');
+
+		_this.trigger('change');
 	};
 
 	Jelect = function ($jelect, options) {
@@ -107,45 +138,15 @@
 
 		// Select an option
 		_this.$jelectOptions.on('click ' + pluginName + '.changeOption', selectors.option, function () {
-			var
-				$this = $(this),
-				currentVal = $this.data('val'),
-				currentText = $this.text();
-
-			// Activate a selected option
-			$this
-				.addClass(classes.optionActive)
-				.siblings(selectors.option)
-				.removeClass(classes.optionActive);
-
-			// Hide a dropdown
+			 var value = $(this).data('val');
+			_setValue.call(_this, value);
 			_this.$jelectOptions.removeClass(classes.optionsActive);
-
-			// Deactivate a Jelect container and fire trigger `jelect.change`
-			_this.$jelect
-				.val(currentVal)
-				.removeClass(classes.containerActive)
-				.trigger('jelect.change');
-
-			// Set a current text
-			_this.$jelectCurrent
-				.text(currentText)
-				.attr('data-val', currentVal)
-				.trigger('focus');
-
-			// Change the value of input and fire trigger `change`
-			_this.$jelectInput
-				.val(currentVal)
-				.trigger('change');
-
-			_this.trigger('change');
 		});
 
 	};
 
 	Jelect.prototype.trigger = function (trigger) {
-		var
-			_this = this;
+		var _this = this;
 
 		$.each(_this.options.plugins || [], function (i, plugin) {
 			plugin = $[pluginName].plugins[plugin];
@@ -170,6 +171,13 @@
 
 	Jelect.prototype.val = function () {
 		return this.$jelect.val();
+	};
+
+	Jelect.prototype.setValue = function (value) {
+		if (value) {
+			_setValue.call(this, value);
+		}
+		return this;
 	};
 
 	// Hide dropdowns when click outside
