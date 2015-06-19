@@ -1,5 +1,9 @@
 mixin jelect(obj)
-	.jelect.js-jelect(id=obj.id role='combobox')
+	.jelect.js-jelect(
+		class=obj.disabled ? 'jelect_state_disabled' : '',
+		id=obj.id,
+		role='combobox'
+	)
 		each option in obj.options
 			if option[2]
 				input.jelect-input.js-jelect-input(
@@ -8,6 +12,7 @@ mixin jelect(obj)
 					value=option[1]
 					data-text=option[0]
 					type='text'
+					disabled=obj.disabled
 				)
 
 				.jelect-current.js-jelect-current(
@@ -35,6 +40,7 @@ mixin jelect(obj)
 			id: 'jelectTool1',
 			inputId: 'jelectToolInput',
 			inputName: 'tool',
+			disabled: true,
 			options: [
 				['gulp', 0, false, false],
 				['browser-sync', 1, false],

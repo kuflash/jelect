@@ -37,6 +37,14 @@ icon()
 	&_state_active
 		box-shadow 0 0 0 1px #ccc, 0 2px 4px rgba(0, 0, 0, .25)
 
+	&_state_disabled
+		opacity .5
+		cursor default
+
+		.jelect-current
+			&:focus
+				background-color #fff
+
 	&:focus
 	*:focus
 		outline none

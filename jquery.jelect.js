@@ -21,6 +21,7 @@
 		options: {
 			classes: {
 				containerActive: pluginName + '_state_active',
+				containerDisabled: pluginName + '_state_disabled',
 				currentActive: pluginName + '-current_state_active',
 				optionsActive: pluginName + '-options_state_active',
 				optionActive: pluginName + '-option_state_active',
@@ -117,10 +118,16 @@
 				// Select all active options container without current
 				$options = $(selectors.options).filter('.' + classes.optionsActive).not(_this.$jelectOptions),
 
+				isDisabled = _this.$jelect.hasClass(classes.containerDisabled),
+
 				canRunTrigger = (
 					!_this.$jelect.hasClass(classes.containerActive) &&
 					!_this.$jelectOptions.hasClass(classes.optionsActive)
 				);
+
+			if (isDisabled) {
+				return false;
+			}
 
 			if (canRunTrigger) {
 				_this.trigger('beforeOpen');
@@ -192,31 +199,53 @@
 		return this;
 	};
 
-	Jelect.prototype.disable = function (value, needDisable) {
+	Jelect.prototype.disable = function (value) {
 		var _this = this,
 			jelect = $[pluginName],
 			selectors = jelect.selectors,
 			classes = jelect.options.classes,
-			$option;
-
-		if (
-			typeof value !== 'undefined' &&
-			typeof needDisable !== 'undefined'
-		) {
 			$option = _this.$jelectOptions
 						.find(selectors.option + '[data-val="' + value + '"]'),
-			$option.toggleClass(classes.optionDisabled, needDisable);
+			isEnabled = !$option.hasClass(classes.optionDisabled);
 
-
-			// if lockable options is selected
-			// then select of the first unlocked option
-			if (_this.$jelectCurrent.data('val') == value) {
-				var $firstEnableOption = _this.$jelectOptions
-											.find(selectors.option)
-											.not('.' + classes.optionDisabled)
-											.first();
-				_this.setValue($firstEnableOption.data('val'));
+		if (typeof value !== 'undefined') {
+			if (isEnabled) {
+				$option.addClass(classes.optionDisabled);
+				// if lockable options is selected
+				// then select of the first unlocked option
+				if (_this.$jelectCurrent.data('val') == value) {
+					var $firstEnableOption = _this.$jelectOptions
+												.find(selectors.option)
+												.not('.' + classes.optionDisabled)
+												.first();
+					_this.setValue($firstEnableOption.data('val'));
+				}
 			}
+		} else {
+			_this.$jelect.addClass(classes.containerDisabled);
+			_this.$jelectInput.attr('disabled', true);
+		}
+		return this;
+	};
+
+	Jelect.prototype.enable = function (value) {
+		var _this = this,
+			jelect = $[pluginName],
+			selectors = jelect.selectors,
+			classes = jelect.options.classes,
+			$option = _this.$jelectOptions
+						.find(selectors.option + '[data-val="' + value + '"]'),
+			isDisabled = $option.hasClass(classes.optionDisabled);
+
+		if (typeof value !== 'undefined' && isDisabled) {
+			if (isDisabled) {
+				$option = _this.$jelectOptions
+							.find(selectors.option + '[data-val="' + value + '"]'),
+				$option.removeClass(classes.optionDisabled);
+			}
+		} else {
+			_this.$jelect.removeClass(classes.containerDisabled);
+			_this.$jelectInput.attr('disabled', false);
 		}
 		return this;
 	};
