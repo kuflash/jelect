@@ -342,6 +342,15 @@ body {
 	box-shadow: 0 0 0 1px #ccc, 0 2px 4px rgba(0,0,0,.25);
 }
 
+.jelect_state_disabled {
+	cursor: default;
+	opacity: .5;
+}
+
+.jelect_state_disabled .jelect-current:focus {
+	background-color: #fff;
+}
+
 .jelect:focus,
 .jelect *:focus {
 	outline: none;
@@ -555,6 +564,19 @@ body {
 .jelect-option_state_active {
 	text-decoration: underline;
 	background-color: #fff2b3;
+}
+
+.jelect-option_state_disabled {
+	cursor: default;
+	text-decoration: none;
+	background-color: #ccc;
+	opacity: .5;
+}
+
+.jelect-option_state_disabled:focus,
+.jelect-option_state_disabled:hover {
+	text-decoration: none;
+	background-color: #ccc;
 }
 
 .jelect-option:before {
