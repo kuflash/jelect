@@ -30,7 +30,8 @@ mixin jelect(obj)
 						data-val=option[1]
 						tabindex=option[3] ? -1 : 1
 						role='option'
-					)= option[0]
+					)
+						.jelect-option__value.js-jelect-option__value= option[0]
 			.jelect-track
 				.jelect-scrollbar.js-jelect-scrollbar
 

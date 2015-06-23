@@ -35,7 +35,8 @@
 			input: '.js-' + pluginName + '-input',
 			current: '.js-' + pluginName + '-current',
 			options: '.js-' + pluginName + '-options',
-			option: '.js-' + pluginName + '-option'
+			option: '.js-' + pluginName + '-option',
+			optionValue: '.js-' + pluginName + '-option__value'
 		},
 		keyCode: {
 			ENTER: 13,
@@ -47,7 +48,7 @@
 		var _this = this,
 			selectors = $[pluginName].selectors,
 			classes = $[pluginName].options.classes,
-			$selectedOption = _this.$jelectOptions.find(selectors.option + '[data-val="' + value + '"]'),
+			$selectedOption = _this.$jelectOptions.find(selectors.option + '[data-val="' + value + '"] ' + selectors.optionValue),
 			currentText = $selectedOption.text();
 
 

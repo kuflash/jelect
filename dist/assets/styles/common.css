@@ -558,6 +558,10 @@ body {
 	box-shadow: none;
 }
 
+.jelect-option__value {
+	display: inline-block;
+}
+
 .jelect-option:focus,
 .jelect-option:hover,
 .jelect-option_state_focused,
