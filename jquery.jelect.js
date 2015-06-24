@@ -48,8 +48,8 @@
 		var _this = this,
 			selectors = $[pluginName].selectors,
 			classes = $[pluginName].options.classes,
-			$selectedOption = _this.$jelectOptions.find(selectors.option + '[data-val="' + value + '"] ' + selectors.optionValue),
-			currentText = $selectedOption.text();
+			$selectedOption = _this.$jelectOptions.find(selectors.option + '[data-val="' + value + '"]'),
+			currentText = $selectedOption.find(selectors.optionValue).text();
 
 
 		if ($selectedOption.hasClass(classes.optionDisabled)) {
