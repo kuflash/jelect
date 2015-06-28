@@ -18,7 +18,8 @@
 	$.extend(true, $[pluginName], {
 		options: {
 			classes: {
-				optionsHasScroll: pluginName + '-options_has_scroll'
+				optionsHasScroll: pluginName + '-options_has_scroll',
+				optionDisabled: pluginName + '-option_state_disabled'
 			}
 		},
 		selectors: {
@@ -79,7 +80,10 @@
 			switch (event.keyCode) {
 				case keyCode.PAGEUP:
 				case keyCode.UP: {
-					$optionPrev = $optionCurrent.prev(selectors.option);
+					$optionPrev = $optionCurrent
+										.prevAll(selectors.option)
+										.not('.' + classes.optionDisabled)
+										.first();
 
 					if ($optionPrev.length) {
 						$optionPrev.trigger('focus');
@@ -93,7 +97,10 @@
 
 				case keyCode.PAGEDOWN:
 				case keyCode.DOWN: {
-					$optionNext = $optionCurrent.next(selectors.option);
+					$optionNext = $optionCurrent
+										.nextAll(selectors.option)
+										.not('.' + classes.optionDisabled)
+										.first();
 
 					if ($optionNext.length) {
 						$optionNext.trigger('focus');
