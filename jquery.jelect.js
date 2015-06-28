@@ -36,7 +36,7 @@
 			current: '.js-' + pluginName + '-current',
 			options: '.js-' + pluginName + '-options',
 			option: '.js-' + pluginName + '-option',
-			optionValue: '.js-' + pluginName + '-option__value'
+			optionValue: '.js-' + pluginName + '-option-value'
 		},
 		keyCode: {
 			ENTER: 13,
