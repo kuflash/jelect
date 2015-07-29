@@ -198,6 +198,11 @@
 			}
 		});
 
+		_this.$jelectCurrent.on('blur', function () {
+			_this.$jelect.removeClass(classes.containerActive);
+			_this.$jelectOptions.removeClass(classes.optionsActive);
+		});
+
 		// Select an option
 		_this.$jelectOptions.on('click ' + pluginName + '.changeOption', selectors.option, function () {
 
@@ -434,7 +439,7 @@
 					case keyCode.ESC: {
 
 						if (!isOpen) {
-							return
+							return;
 						}
 
 						if ($options.length) {
@@ -451,7 +456,7 @@
 						event.preventDefault();
 
 						if (!isOpen) {
-							return
+							return;
 						}
 
 						var isFirst = $options.first().is($activeOption);
@@ -480,7 +485,7 @@
 						event.preventDefault();
 
 						if (!isOpen) {
-							return
+							return;
 						}
 
 						var isLast = $options.last().is($activeOption);
@@ -509,7 +514,7 @@
 						event.preventDefault();
 
 						if (!isOpen) {
-							return
+							return;
 						}
 
 						if ($activeOption.is($options.first())) {
@@ -530,7 +535,7 @@
 						event.preventDefault();
 
 						if (!isOpen) {
-							return
+							return;
 						}
 
 						if ($activeOption.is($options.last())) {
@@ -551,7 +556,7 @@
 						event.preventDefault();
 
 						if (!isOpen) {
-							return
+							return;
 						}
 
 						optionsInPage = Math.round(optionsHeight / $activeOption.outerHeight());
@@ -586,7 +591,7 @@
 						event.preventDefault();
 
 						if (!isOpen) {
-							return
+							return;
 						}
 
 						optionsInPage = Math.round(optionsHeight / $activeOption.outerHeight());
