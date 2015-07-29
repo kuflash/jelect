@@ -47,7 +47,9 @@
 			ENTER: 13,
 			ESC: 27,
 			DOWN: 40,
-			UP: 38
+			UP: 38,
+			HOME: 36,
+			END: 35
 		}
 	};
 
@@ -480,6 +482,32 @@
 						} else if (optionPosition < 0) {
 							scrollTop = optionPosition;
 						}
+
+						break;
+					}
+
+					case keyCode.HOME: {
+
+						event.preventDefault();
+
+						$activeOption.removeClass(classes.optionActive);
+
+						$nextOption = $options.first();
+
+						scrollTop = $nextOption.position().top;
+
+						break;
+					}
+
+					case keyCode.END: {
+
+						event.preventDefault();
+						
+						$activeOption.removeClass(classes.optionActive);
+
+						$nextOption = $options.last();
+
+						scrollTop = $nextOption.position().top;
 
 						break;
 					}
