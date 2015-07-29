@@ -450,7 +450,7 @@
 						$activeOption.removeClass(classes.optionActive);
 
 						if (!isFirst) {
-							$nextOption = $activeOption.prevAll(':visible').first();
+							$nextOption = $activeOption.prevAll(':visible').not('.' + classes.optionDisabled).first();
 						} else {
 							$nextOption = $options.last();
 						}
@@ -475,7 +475,7 @@
 						$activeOption.removeClass(classes.optionActive);
 
 						if (!isLast) {
-							$nextOption = $activeOption.nextAll(':visible').first();
+							$nextOption = $activeOption.nextAll(':visible').not('.' + classes.optionDisabled).first();
 						} else {
 							$nextOption = $options.first();
 						}
@@ -483,7 +483,7 @@
 						optionPosition = $nextOption.position().top;
 
 						if (optionPosition >= optionsHeight) {
-							scrollTop += $nextOption.outerHeight();
+							scrollTop += optionPosition;
 						} else if (optionPosition < 0) {
 							scrollTop = optionPosition;
 						}
@@ -494,6 +494,10 @@
 					case keyCode.HOME: {
 
 						event.preventDefault();
+
+						if ($activeOption.is($options.first())) {
+							return;
+						}
 
 						$activeOption.removeClass(classes.optionActive);
 
@@ -507,6 +511,10 @@
 					case keyCode.END: {
 
 						event.preventDefault();
+
+						if ($activeOption.is($options.last())) {
+							return;
+						}
 
 						$activeOption.removeClass(classes.optionActive);
 
@@ -523,17 +531,27 @@
 
 						optionsInPage = Math.round(optionsHeight / $activeOption.outerHeight());
 						page = Math.ceil(($activeOption.index() + 1) / optionsInPage) - 1;
-						indexNextOption = page * optionsInPage - optionsInPage + 1;
+						indexNextOption = page * optionsInPage - optionsInPage - 1;
 
 						$activeOption.removeClass(classes.optionActive);
 
 						if (indexNextOption < 0) {
 							indexNextOption = 0;
 						}
+						if (
+							indexNextOption === 0 &&
+							$options.eq(indexNextOption).hasClass(classes.optionDisabled)
+						) {
+							$nextOption = $options
+								.eq(indexNextOption)
+								.nextAll(':visible')
+								.not('.' + classes.optionDisabled)
+								.first();
+						} else {
+							$nextOption = $options.eq(indexNextOption);
+						}
 
-						$nextOption = $options.eq(indexNextOption);
-
-						scrollTop -= optionsHeight;
+						scrollTop += $nextOption.position().top;
 
 						break;
 					}
@@ -552,9 +570,17 @@
 							indexNextOption = $options.length - 1;
 						}
 
-						$nextOption = $options.eq(indexNextOption);
+						if (indexNextOption === $options.length - 1) {
+							$nextOption = $options.eq(indexNextOption);
+						} else {
+							$nextOption = $options
+								.eq(indexNextOption)
+								.nextAll(':visible')
+								.not('.' + classes.optionDisabled)
+								.first();
+						}
 
-						scrollTop += optionsHeight;
+						scrollTop += $nextOption.position().top;
 
 						break;
 					}
