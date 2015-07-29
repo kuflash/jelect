@@ -49,7 +49,9 @@
 			DOWN: 40,
 			UP: 38,
 			HOME: 36,
-			END: 35
+			END: 35,
+			PAGE_UP: 33,
+			PAGE_DOWN: 34
 		}
 	};
 
@@ -391,6 +393,9 @@
 				optionPosition,
 				optionsHeight,
 				isOpen,
+				optionsInPage,
+				page,
+				indexNextOption,
 				$jelect,
 				$scroller,
 				$optionsContainer,
@@ -511,6 +516,49 @@
 
 						break;
 					}
+
+					case keyCode.PAGE_UP: {
+
+						event.preventDefault();
+
+						optionsInPage = Math.round(optionsHeight / $activeOption.outerHeight());
+						page = Math.ceil(($activeOption.index() + 1) / optionsInPage) - 1;
+						indexNextOption = page * optionsInPage - optionsInPage + 1;
+
+						$activeOption.removeClass(classes.optionActive);
+
+						if (indexNextOption < 0) {
+							indexNextOption = 0;
+						}
+
+						$nextOption = $options.eq(indexNextOption);
+
+						scrollTop -= optionsHeight;
+
+						break;
+					}
+
+					case keyCode.PAGE_DOWN: {
+
+						event.preventDefault();
+
+						optionsInPage = Math.round(optionsHeight / $activeOption.outerHeight());
+						page = Math.ceil(($activeOption.index() + 1) / optionsInPage) + 1;
+						indexNextOption = page * optionsInPage - optionsInPage;
+
+						$activeOption.removeClass(classes.optionActive);
+
+						if (indexNextOption > $options.length) {
+							indexNextOption = $options.length - 1;
+						}
+
+						$nextOption = $options.eq(indexNextOption);
+
+						scrollTop += optionsHeight;
+
+						break;
+					}
+
 				}
 				if ($nextOption) {
 					$nextOption.addClass(classes.optionActive);
