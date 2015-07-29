@@ -392,6 +392,7 @@
 				scrollTop,
 				optionPosition,
 				optionsHeight,
+				isOpen,
 				optionsInPage,
 				page,
 				indexNextOption,
@@ -412,6 +413,8 @@
 				$options = $jelect.find(selectors.option).not('.' + classes.optionHide);
 				$activeOption = $options.filter('.' + classes.optionActive);
 
+				isOpen = $jelect.hasClass(classes.containerActive);
+
 				scrollTop = $scroller.scrollTop();
 
 				switch (eventKeyCode) {
@@ -429,6 +432,11 @@
 					}
 
 					case keyCode.ESC: {
+
+						if (!isOpen) {
+							return
+						}
+
 						if ($options.length) {
 							$target.trigger(pluginName + '.clickCurrent');
 						}
@@ -441,6 +449,10 @@
 					case keyCode.UP: {
 
 						event.preventDefault();
+
+						if (!isOpen) {
+							return
+						}
 
 						var isFirst = $options.first().is($activeOption);
 
@@ -467,6 +479,10 @@
 
 						event.preventDefault();
 
+						if (!isOpen) {
+							return
+						}
+
 						var isLast = $options.last().is($activeOption);
 
 						$activeOption.removeClass(classes.optionActive);
@@ -492,6 +508,10 @@
 
 						event.preventDefault();
 
+						if (!isOpen) {
+							return
+						}
+
 						if ($activeOption.is($options.first())) {
 							return;
 						}
@@ -509,6 +529,10 @@
 
 						event.preventDefault();
 
+						if (!isOpen) {
+							return
+						}
+
 						if ($activeOption.is($options.last())) {
 							return;
 						}
@@ -525,6 +549,10 @@
 					case keyCode.PAGE_UP: {
 
 						event.preventDefault();
+
+						if (!isOpen) {
+							return
+						}
 
 						optionsInPage = Math.round(optionsHeight / $activeOption.outerHeight());
 						page = Math.ceil(($activeOption.index() + 1) / optionsInPage) - 1;
@@ -556,6 +584,10 @@
 					case keyCode.PAGE_DOWN: {
 
 						event.preventDefault();
+
+						if (!isOpen) {
+							return
+						}
 
 						optionsInPage = Math.round(optionsHeight / $activeOption.outerHeight());
 						page = Math.ceil(($activeOption.index() + 1) / optionsInPage) + 1;
