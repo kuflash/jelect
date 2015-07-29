@@ -392,7 +392,6 @@
 				scrollTop,
 				optionPosition,
 				optionsHeight,
-				isOpen,
 				optionsInPage,
 				page,
 				indexNextOption,
@@ -413,18 +412,16 @@
 				$options = $jelect.find(selectors.option).not('.' + classes.optionHide);
 				$activeOption = $options.filter('.' + classes.optionActive);
 
-				isOpen = $jelect.hasClass(classes.containerActive);
-
-				if (!isOpen) {
-					return;
-				}
-
 				scrollTop = $scroller.scrollTop();
 
 				switch (eventKeyCode) {
 					case keyCode.ENTER: {
 
-						$activeOption.trigger(pluginName + '.changeOption');
+						if ($jelect.hasClass(classes.containerActive)) {
+							$activeOption.trigger(pluginName + '.changeOption');
+						} else {
+							$target.trigger('click');
+						}
 
 						event.preventDefault();
 
@@ -436,7 +433,7 @@
 							$target.trigger(pluginName + '.clickCurrent');
 						}
 
-						$target.trigger('blur');
+						$target.trigger('click');
 
 						break;
 					}
