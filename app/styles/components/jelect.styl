@@ -34,6 +34,11 @@ icon()
 	user-select none
 	box-sizing border-box
 
+	&_type_autocomplete
+		.jelect-current
+			padding-left 8px
+			padding-right 8px
+
 	&_state_active
 		box-shadow 0 0 0 1px #ccc, 0 2px 4px rgba(0, 0, 0, .25)
 
@@ -222,5 +227,8 @@ icon()
 			&:hover
 				text-decoration none
 				background-color #ccc
+
+		&_state_hide
+			display none
 
 		icon()

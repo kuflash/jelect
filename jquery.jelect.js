@@ -14,24 +14,28 @@
 	var
 		Jelect,
 		pluginName = 'jelect',
-		_setValue;
+		_setValue,
+		_getValues;
 
 	$[pluginName] = {
 		version: '1.0.0',
 		options: {
 			classes: {
+				autocomplete: pluginName + '_type_autocomplete',
 				containerActive: pluginName + '_state_active',
 				containerDisabled: pluginName + '_state_disabled',
 				currentActive: pluginName + '-current_state_active',
 				optionsActive: pluginName + '-options_state_active',
 				optionActive: pluginName + '-option_state_active',
-				optionDisabled: pluginName + '-option_state_disabled'
+				optionDisabled: pluginName + '-option_state_disabled',
+				optionHide: pluginName + '-option_state_hide'
 			},
 			plugins: []
 		},
 		plugins: {},
 		selectors: {
 			container: '.js-' + pluginName,
+			scroller: '.js-' + pluginName + '-scroller',
 			input: '.js-' + pluginName + '-input',
 			current: '.js-' + pluginName + '-current',
 			options: '.js-' + pluginName + '-options',
@@ -39,15 +43,19 @@
 			optionValue: '.js-' + pluginName + '-option-value'
 		},
 		keyCode: {
+			BACKSPACE: 8,
 			ENTER: 13,
-			ESC: 27
+			ESC: 27,
+			DOWN: 40,
+			UP: 38
 		}
 	};
 
 	_setValue = function (value) {
 		var _this = this,
-			selectors = $[pluginName].selectors,
-			classes = $[pluginName].options.classes,
+			jelect = $[pluginName],
+			selectors = jelect.selectors,
+			classes = jelect.options.classes,
 			$selectedOption = _this.$jelectOptions.find(selectors.option + '[data-val="' + value + '"]'),
 			currentText = $selectedOption.find(selectors.optionValue).text();
 
@@ -67,31 +75,59 @@
 			.removeClass(classes.containerActive)
 			.trigger('jelect.change');
 
-		// Set a current text
-		_this.$jelectCurrent
-			.text(currentText)
-			.attr('data-val', value);
 
-		// Change the value of input and fire trigger `change`
-		_this.$jelectInput
-			.val(value)
-			.trigger('change');
+		if (_this.autocomplete) {
+			_this.$jelectCurrent.val(value);
+		} else {
+			// Set a current text
+			_this.$jelectCurrent
+				.text(currentText)
+				.attr('data-val', value);
+
+			// Change the value of input and fire trigger `change`
+			_this.$jelectInput
+				.val(value)
+				.trigger('change');
+		}
 
 		_this.trigger('change');
 	};
 
+	_getValues = function () {
+
+		var _this = this,
+			selectors = $[pluginName].selectors,
+			values = [];
+
+		_this.$jelectOptions
+			.find(selectors.option)
+			.each(function (i, option) {
+
+				var $option = $(option);
+
+				values.push({
+					index: i,
+					value: $option.data('val')
+				});
+			});
+
+		return values;
+	};
+
 	Jelect = function ($jelect, options) {
+
 		var
 			defaults = $[pluginName],
 			selectors = defaults.selectors,
+			classes = defaults.options.classes,
 			jelect = {
 				$jelect: $jelect,
 				$jelectCurrent: $jelect.find(selectors.current),
 				$jelectOptions: $jelect.find(selectors.options),
 				$jelectInput: $jelect.find(selectors.input),
+				autocomplete: $jelect.hasClass(classes.autocomplete),
 				options: $.extend(true, {}, defaults.options, options || {})
 			};
-
 		$.extend(true, this, jelect);
 
 		this.init();
@@ -106,6 +142,9 @@
 			initVal = _this.val();
 
 		_this.trigger('init');
+
+		// store data
+		_this.values = _this.serialize();
 
 		// Set init value
 		_this.$jelect.val(initVal);
@@ -144,6 +183,10 @@
 			_this.$jelect.toggleClass(classes.containerActive);
 			_this.$jelectOptions.toggleClass(classes.optionsActive);
 
+			if (_this.autocomplete) {
+				_this.$jelectCurrent.trigger('keyup');
+			}
+
 			if (canRunTrigger) {
 				_this.$jelectCurrent.trigger('focus');
 
@@ -157,11 +200,52 @@
 			var $this = $(this),
 				value = $this.data('val');
 
-			if ($this.hasClass(classes.optionDisabled)) return false;
+			if ($this.hasClass(classes.optionDisabled)) {
+				return false;
+			}
 
 			_setValue.call(_this, value);
 			_this.$jelectOptions.removeClass(classes.optionsActive);
 		});
+
+		if (_this.autocomplete) {
+			_this.$jelectCurrent.on('keyup', function (event) {
+
+				var $input = $(this),
+					keyCode = jelect.keyCode,
+					eventKeyCode = event.keyCode,
+					char = String.fromCharCode(eventKeyCode),
+					pattern = /[a-zA-Zа-яА-ЯЁё0-9]/,
+					value = $input.val(),
+					$options = _this.$jelectOptions.find(selectors.option),
+					filteredOptions = $.grep(_this.values, function (option) {
+						return option.value.indexOf(value) === -1;
+					});
+
+				if (!pattern.test(char) && eventKeyCode !== keyCode.BACKSPACE) {
+					return;
+				}
+
+				if (!_this.$jelect.hasClass(classes.containerActive)) {
+					_this.$jelectCurrent.trigger('click');
+				}
+
+				$options.removeClass(classes.optionHide);
+
+				$.each(filteredOptions, function (i, option) {
+					var value = option.value;
+					$options
+						.filter('[data-val="' + value + '"]')
+						.addClass(classes.optionHide);
+				});
+
+				$options
+					.filter(':visible')
+					.first()
+					.addClass(classes.optionActive);
+
+			});
+		}
 
 	};
 
@@ -200,6 +284,10 @@
 		return this;
 	};
 
+	Jelect.prototype.serialize = function () {
+		return _getValues.call(this);
+	};
+
 	Jelect.prototype.disable = function (value) {
 		var _this = this,
 			jelect = $[pluginName],
@@ -214,7 +302,7 @@
 				$option.addClass(classes.optionDisabled);
 				// if lockable options is selected
 				// then select of the first unlocked option
-				if (_this.$jelectCurrent.data('val') == value) {
+				if (_this.$jelectCurrent.data('val') === value) {
 					var $firstEnableOption = _this.$jelectOptions
 												.find(selectors.option)
 												.not('.' + classes.optionDisabled)
@@ -293,16 +381,41 @@
 				selectors = jelect.selectors,
 				jelectData,
 				classes,
-				$options;
+				scrollTop,
+				optionPosition,
+				optionsHeight,
+				isOpen,
+				$jelect,
+				$scroller,
+				$optionsContainer,
+				$options,
+				$activeOption,
+				$nextOption;
 
 			if ($target.is(selectors.current)) {
 				jelectData = $target.closest(selectors.container).data(pluginName);
 				classes = jelectData.options.classes;
-				$options = $target.siblings(selectors.options).filter(':visible');
+				$jelect = $target.closest(selectors.container);
+				$scroller = $jelect.find(selectors.scroller);
+				$optionsContainer = $jelect.find(selectors.options);
+				optionsHeight = $optionsContainer.outerHeight();
+				$options = $jelect.find(selectors.option).not('.' + classes.optionHide);
+				$activeOption = $options.filter('.' + classes.optionActive);
+
+				isOpen = $jelect.hasClass(classes.containerActive);
+
+				if (!isOpen) {
+					return;
+				}
+
+				$activeOption.removeClass(classes.optionActive);
+
+				scrollTop = $scroller.scrollTop();
 
 				switch (eventKeyCode) {
 					case keyCode.ENTER: {
-						$target.trigger(pluginName + '.clickCurrent');
+
+						$activeOption.trigger(pluginName + '.changeOption');
 
 						event.preventDefault();
 
@@ -318,7 +431,58 @@
 
 						break;
 					}
+
+					case keyCode.UP: {
+
+						event.preventDefault();
+
+						var isFirst = $options.first().is($activeOption);
+
+						if (!isFirst) {
+							$nextOption = $activeOption.prevAll(':visible').first();
+						} else {
+							$nextOption = $options.last();
+						}
+
+						optionPosition = $nextOption.position().top;
+
+						if (optionPosition < 0) {
+							scrollTop += optionPosition;
+						} else if (optionPosition > scrollTop + optionsHeight) {
+							scrollTop = optionPosition;
+						}
+
+						break;
+					}
+
+					case keyCode.DOWN: {
+
+						event.preventDefault();
+
+						var isLast = $options.last().is($activeOption);
+
+						if (!isLast) {
+							$nextOption = $activeOption.nextAll(':visible').first();
+						} else {
+							$nextOption = $options.first();
+						}
+
+						optionPosition = $nextOption.position().top;
+
+						if (optionPosition >= optionsHeight) {
+							scrollTop += $nextOption.outerHeight();
+						} else if (optionPosition < 0) {
+							scrollTop = optionPosition;
+						}
+
+						break;
+					}
 				}
+				if ($nextOption) {
+					$nextOption.addClass(classes.optionActive);
+					$scroller.scrollTop(scrollTop);
+				}
+
 			} else if ($target.is(selectors.option)) {
 				jelectData = $target.closest(selectors.container).data(pluginName);
 				classes = jelectData.options.classes;

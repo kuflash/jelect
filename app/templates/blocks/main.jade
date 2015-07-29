@@ -1,26 +1,38 @@
+mixin jelect-current(option, params)
+	if params.autocomplete
+		input.jelect-current.js-jelect-current(
+			type='text',
+			id=params.inputId,
+			name=params.name,
+			tabindex=1,
+			value=option[0]
+		)
+	else
+		input.jelect-input.js-jelect-input(
+			id=params.inputId,
+			name=params.name,
+			value=option[1],
+			data-text=option[0],
+			type='text',
+			disabled=params.disabled
+		)
+
+		.jelect-current.js-jelect-current(
+			data-val=option[1],
+			tabindex=1,
+			role='button'
+		)= option[0]
+
 mixin jelect(obj)
 	.jelect.js-jelect(
 		class=obj.disabled ? 'jelect_state_disabled' : '',
+		class=obj.autocomplete ? 'jelect_type_autocomplete' : '',
 		id=obj.id,
 		role='combobox'
 	)
 		each option in obj.options
 			if option[2]
-				input.jelect-input.js-jelect-input(
-					id=obj.inputId
-					name=obj.name
-					value=option[1]
-					data-text=option[0]
-					type='text'
-					disabled=obj.disabled
-				)
-
-				.jelect-current.js-jelect-current(
-					data-val=option[1]
-					tabindex=1,
-					role='button'
-				)= option[0]
-
+				+jelect-current(option, obj)
 		.jelect-options.js-jelect-options(role='list-box')
 			.jelect-scroller.js-jelect-scroller
 				each option in obj.options
@@ -28,7 +40,7 @@ mixin jelect(obj)
 						class=option[2] ? 'jelect-option_state_active' : '' 
 						class=option[3] ? 'jelect-option_state_disabled' : ''
 						data-val=option[1]
-						tabindex=option[3] ? -1 : 1
+						tabindex=-1
 						role='option'
 					)
 						.jelect-option__value.js-jelect-option-value= option[0]
@@ -88,29 +100,23 @@ mixin jelect(obj)
 				['rupture', 16]
 			]
 		})
-
+.jelect-box
 	.jelect-col
 		+jelect({
 			id: 'jelectTool3',
 			inputId: 'jelectToolInput3',
 			inputName: 'tool3',
+			autocomplete: true,
+			disabled: false,
 			options: [
-				['gulp', 0, true],
-				['browser-sync', 1],
-				['del', 2],
-				['gulp-autoprefixer', 3],
-				['gulp-combine-media-queries', 4],
-				['gulp-concat', 5],
-				['gulp-csscomb', 6],
-				['gulp-imagemin', 7],
-				['gulp-jade', 8],
-				['gulp-jscs', 9],
-				['gulp-jshint', 10],
-				['gulp-minify-css', 11],
-				['gulp-prettify', 12],
-				['gulp-stylus', 13],
-				['gulp-uglify', 14],
-				['gulp.spritesmith', 15],
-				['rupture', 16]
+				['gulp', 'gulp', true],
+				['browser-sync', 'browser-sync'],
+				['del', 'del'],
+				['gulp-autoprefixer', 'gulp-autoprefixer'],
+				['gulp-combine-media-queries', 'gulp-combine-media-queries'],
+				['gulp-concat', 'gulp-concat'],
+				['gulp-csscomb', 'gulp-csscomb'],
+				['gulp-imagemin', 'gulp-imagemin'],
+				['gulp-jade', 'gulp-jade']
 			]
 		})
