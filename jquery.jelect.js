@@ -502,7 +502,7 @@
 					case keyCode.END: {
 
 						event.preventDefault();
-						
+
 						$activeOption.removeClass(classes.optionActive);
 
 						$nextOption = $options.last();
