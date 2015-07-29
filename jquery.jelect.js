@@ -408,8 +408,6 @@
 					return;
 				}
 
-				$activeOption.removeClass(classes.optionActive);
-
 				scrollTop = $scroller.scrollTop();
 
 				switch (eventKeyCode) {
@@ -438,6 +436,8 @@
 
 						var isFirst = $options.first().is($activeOption);
 
+						$activeOption.removeClass(classes.optionActive);
+
 						if (!isFirst) {
 							$nextOption = $activeOption.prevAll(':visible').first();
 						} else {
@@ -460,6 +460,8 @@
 						event.preventDefault();
 
 						var isLast = $options.last().is($activeOption);
+
+						$activeOption.removeClass(classes.optionActive);
 
 						if (!isLast) {
 							$nextOption = $activeOption.nextAll(':visible').first();
