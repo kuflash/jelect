@@ -218,6 +218,7 @@
 					pattern = /[a-zA-Zа-яА-ЯЁё0-9]/,
 					value = $input.val(),
 					$options = _this.$jelectOptions.find(selectors.option),
+					$scroller = _this.$jelect.find(selectors.scroller),
 					filteredOptions = $.grep(_this.values, function (option) {
 						return option.value.indexOf(value) === -1;
 					});
@@ -241,8 +242,11 @@
 
 				$options
 					.filter(':visible')
+					.removeClass(classes.optionActive)
 					.first()
 					.addClass(classes.optionActive);
+
+				$scroller.scrollTop(0);
 
 			});
 		}
