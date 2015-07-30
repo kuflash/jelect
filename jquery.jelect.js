@@ -76,6 +76,7 @@
 			.removeClass(classes.optionActive);
 
 		_this.$jelect
+			.val(value)
 			.removeClass(classes.containerActive)
 			.trigger('jelect.change');
 
@@ -144,7 +145,7 @@
 			jelect = $[pluginName],
 			selectors = jelect.selectors,
 			classes = _this.options.classes,
-			initVal = _this.val();
+			initVal = _this.$jelectOptions.find(selectors.option).not('.' + classes.optionDisabled).data('val');
 
 		_this.trigger('init');
 
@@ -162,6 +163,12 @@
 
 				// Select all active options container without current
 				$options = $(selectors.options).filter('.' + classes.optionsActive).not(_this.$jelectOptions),
+
+				$scroller = _this.$jelect.find(selectors.scroller),
+
+				$activeOption,
+
+				scrollValue = $scroller.scrollTop(),
 
 				isDisabled = _this.$jelect.hasClass(classes.containerDisabled),
 
@@ -187,6 +194,12 @@
 			// Open or close current
 			_this.$jelect.toggleClass(classes.containerActive);
 			_this.$jelectOptions.toggleClass(classes.optionsActive);
+
+			if (_this.$jelect.hasClass(classes.containerActive)) {
+				$activeOption = _this.$jelectOptions.find('.' + classes.optionActive);
+				scrollValue = $scroller.scrollTop();
+				$scroller.scrollTop(scrollValue + $activeOption.position().top);
+			}
 
 			if (_this.autocomplete) {
 				_this.$jelectCurrent.trigger('keyup');
@@ -425,6 +438,8 @@
 						$jelect.removeClass(classes.containerActive);
 						$optionsContainer.removeClass(classes.optionsActive);
 
+						_setValue.call(jelectData, jelectData.val());
+
 						break;
 					}
 
@@ -447,11 +462,11 @@
 							return;
 						}
 
-						if ($options.length) {
-							$target.trigger(pluginName + '.clickCurrent');
-						}
-
 						$target.trigger('click');
+
+						_setValue.call(jelectData, jelectData.val());
+
+						event.preventDefault();
 
 						break;
 					}
@@ -461,6 +476,7 @@
 						event.preventDefault();
 
 						if (!isOpen) {
+							$target.trigger('click');
 							return;
 						}
 
@@ -490,6 +506,7 @@
 						event.preventDefault();
 
 						if (!isOpen) {
+							$target.trigger('click');
 							return;
 						}
 
