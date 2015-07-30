@@ -205,8 +205,6 @@
 			var $this = $(this),
 				value = $this.data('val');
 
-			console.log(value)
-
 			if ($this.hasClass(classes.optionDisabled)) {
 				return false;
 			}
