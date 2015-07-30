@@ -43,6 +43,7 @@
 			optionValue: '.js-' + pluginName + '-option-value'
 		},
 		keyCode: {
+			TAB: 9,
 			BACKSPACE: 8,
 			ENTER: 13,
 			ESC: 27,
@@ -198,16 +199,13 @@
 			}
 		});
 
-		_this.$jelectCurrent.on('blur', function () {
-			_this.$jelect.removeClass(classes.containerActive);
-			_this.$jelectOptions.removeClass(classes.optionsActive);
-		});
-
 		// Select an option
 		_this.$jelectOptions.on('click ' + pluginName + '.changeOption', selectors.option, function () {
 
 			var $this = $(this),
 				value = $this.data('val');
+
+			console.log(value)
 
 			if ($this.hasClass(classes.optionDisabled)) {
 				return false;
@@ -423,6 +421,15 @@
 				scrollTop = $scroller.scrollTop();
 
 				switch (eventKeyCode) {
+
+					case keyCode.TAB: {
+
+						$jelect.removeClass(classes.containerActive);
+						$optionsContainer.removeClass(classes.optionsActive);
+
+						break;
+					}
+
 					case keyCode.ENTER: {
 
 						if ($jelect.hasClass(classes.containerActive)) {
