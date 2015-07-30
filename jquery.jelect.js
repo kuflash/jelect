@@ -76,7 +76,6 @@
 			.removeClass(classes.optionActive);
 
 		_this.$jelect
-			.val(value)
 			.removeClass(classes.containerActive)
 			.trigger('jelect.change');
 
@@ -92,6 +91,7 @@
 			// Change the value of input and fire trigger `change`
 			_this.$jelectInput
 				.val(value)
+				.attr('value', value)
 				.trigger('change');
 		}
 
