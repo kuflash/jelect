@@ -32,7 +32,7 @@ See in [example](https://github.com/CSSSR/jelect/tree/master/src/stylus/jelect.s
 
 ### HTML
 
-Use a specific class for your options and use the title attribute as caption.
+The component can be used in two variations. As a regular drop-down list:
 
 ```html
 <div id="jelectTool1" role="combobox" class="jelect js-jelect">
@@ -40,10 +40,10 @@ Use a specific class for your options and use the title attribute as caption.
 	<div tabindex="1" role="button" class="jelect-current js-jelect-current">gulp</div>
 	<div role="list-box" class="jelect-options js-jelect-options">
 		<div class="jelect-scroller js-jelect-scroller">
-			<div data-val="0" tabindex="1" role="option" class="jelect-option js-jelect-option jelect-option_state_active">gulp</div>
-			<div data-val="1" tabindex="1" role="option" class="jelect-option js-jelect-option">browser-sync</div>
-			<div data-val="2" tabindex="1" role="option" class="jelect-option js-jelect-option">del</div>
-			<div data-val="3" tabindex="1" role="option" class="jelect-option js-jelect-option">gulp-autoprefixer</div>
+			<div data-val="0" tabindex="1" role="option" class="jelect-option js-jelect-option jelect-option_state_active"><div class='jelect-option__value js-jelect-option-value'>gulp</div></div>
+			<div data-val="1" tabindex="1" role="option" class="jelect-option js-jelect-option"><div class='jelect-option__value js-jelect-option-value'>browser-sync</div></div>
+			<div data-val="2" tabindex="1" role="option" class="jelect-option js-jelect-option"><div class='jelect-option__value js-jelect-option-value'>del</div></div>
+			<div data-val="3" tabindex="1" role="option" class="jelect-option js-jelect-option"><div class='jelect-option__value js-jelect-option-value'>gulp-autoprefixer</div></div>
 			<!-- ... -->
 		</div>
 		<div class="jelect-track">
@@ -52,6 +52,28 @@ Use a specific class for your options and use the title attribute as caption.
 	</div>
 </div>
 ```
+
+So list of autocompletion and filtration values::
+
+```html
+<div id="jelectTool1" role="combobox" class="jelect jelect_type_autocomplete js-jelect">
+	<input type="text" id="jelectToolInput" name="jelectToolInput" tabindex="1" class="jelect-current js-jelect-current" value="0"/>
+	<div role="list-box" class="jelect-options js-jelect-options">
+		<div class="jelect-scroller js-jelect-scroller">
+			<div data-val="0" tabindex="1" role="option" class="jelect-option js-jelect-option jelect-option_state_active"><div class='jelect-option__value js-jelect-option-value'>gulp</div></div>
+			<div data-val="1" tabindex="1" role="option" class="jelect-option js-jelect-option"><div class='jelect-option__value js-jelect-option-value'>browser-sync</div></div>
+			<div data-val="2" tabindex="1" role="option" class="jelect-option js-jelect-option"><div class='jelect-option__value js-jelect-option-value'>del</div></div>
+			<div data-val="3" tabindex="1" role="option" class="jelect-option js-jelect-option"><div class='jelect-option__value js-jelect-option-value'>gulp-autoprefixer</div></div>
+			<!-- ... -->
+		</div>
+		<div class="jelect-track">
+			<div class="jelect-scrollbar js-jelect-scrollbar"></div>
+		</div>
+	</div>
+</div>
+```
+
+If you are using Jade, you can use ready-made mixins this [https://github.com/CSSSR/jelect/blob/v1.x.x/app/templates/blocks/main.jade](example)
 
 ### Fire the plugin
 
@@ -69,20 +91,47 @@ $( '#jelect' ).on( 'change', function (e) {
 });
 ```
 
+You can change the selected value from the code:
+
+```javascript
+$( '#jelect' ).jelect('setValue', 1);
+```
+
+For disable selection jelect use next construction:
+
+```javascript
+$( '#jelect' ).jelect('disable');
+```
+
+For enable selection jelect use next construction:
+
+```javascript
+$( '#jelect' ).jelect('enable');
+```
+
+For disable/enable single options use next construction:
+
+```javascript
+$( '#jelect' ).jelect('enable', 1);
+$( '#jelect' ).jelect('disable', 2);
+```
+
 ### Default Options
 
 Uses for custom CSS classes.
 
-Key | Value | Description
---- | --- | ---
-`wrapper` | `'.jelect'` | A Jelect wrapper.
-`input` | `'.jelect-input'` | An input type text.
-`current` | `'.jelect-current'` | A caption for a current text.
-`optionsWrapper` | `'.jelect-options'` | A dropdown wrapper.
-`option` | `'.jelect-option'` | An option.
-`activeClass` | `'jelect_state_active'` | An active state of Jelect wrapper.
-`optionsWrapperActiveClass` | `'jelect-options_state_active'` | An active state of a dropdown wrapper.
-`optionActiveClass` | `'jelect-option_state_active'` | An active state of option.
+Class | Description
+--- | ---
+`'.jelect'` | A Jelect wrapper.
+`'.jelect-input'` | An input type text. It's hidden field
+`'.jelect-current'` | A caption for a current text. It may also be an input field for the version with autocompletion.
+`'.jelect-options'` | A dropdown wrapper.
+`'.jelect-option'` | An option.
+`'.jelect_state_active'` | An active state of Jelect wrapper.
+`'.jelect_state_disabled'` | An disable state of Jelect wrapper.
+`'.jelect-options_state_active'` | An active state of a dropdown wrapper.
+`'.jelect-option_state_active'` | An active state of option.
+`'.jelect-option_state_disabled'` | An disable state of option
 
 ## License
 
