@@ -73,7 +73,7 @@ So list of autocompletion and filtration values::
 </div>
 ```
 
-If you are using Jade, you can use ready-made mixins this [https://github.com/CSSSR/jelect/blob/v1.x.x/app/templates/blocks/main.jade](example)
+If you are using Jade, you can use ready-made mixins this [example](https://github.com/CSSSR/jelect/blob/v1.x.x/app/templates/blocks/main.jade)
 
 ### Fire the plugin
 
