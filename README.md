@@ -20,7 +20,7 @@ Chrome, Safari, Firefox, Opera, IE9+, IOS4+, Android, Windows Phone.
 Include jQuery and the Jelect script in right before your body closing tag.
 
 ```html
-<script src="/path/to/libs/jquery-2.1.3.min.js"></script>
+<script src="/path/to/libs/jquery.min.js"></script>
 <script src="/path/to/jquery.jelect.min.js"></script>
 ```
 
@@ -80,13 +80,13 @@ If you are using Jade, you can use ready-made mixins this [example](https://gith
 Bind Jelect behaviour on every link with the `.jelect` class.
 
 ```javascript
-$( '.jelect' ).jelect();
+$('.jelect').jelect();
 ```
 
 To get a current value bind `change` on an inner input element.
 
 ```javascript
-$( '#jelect' ).on( 'change', function (e) {
+$('#jelect').on( 'change', function (e) {
     console.log( this.value + ' | ' + this.dataset.text );
 });
 ```
@@ -94,26 +94,57 @@ $( '#jelect' ).on( 'change', function (e) {
 You can change the selected value from the code:
 
 ```javascript
-$( '#jelect' ).jelect('setValue', 1);
+$('#jelect').jelect('setValue', 1);
 ```
 
 For disable selection jelect use next construction:
 
 ```javascript
-$( '#jelect' ).jelect('disable');
+$('#jelect').jelect('disable');
 ```
 
 For enable selection jelect use next construction:
 
 ```javascript
-$( '#jelect' ).jelect('enable');
+$('#jelect').jelect('enable');
 ```
 
 For disable/enable single options use next construction:
 
 ```javascript
-$( '#jelect' ).jelect('enable', 1);
-$( '#jelect' ).jelect('disable', 2);
+$('#jelect').jelect('enable', 1);
+$('#jelect').jelect('disable', 2);
+```
+
+You can also extend the functionality with plug-ins using the following template:
+
+```javascript
+
+	// define plugin
+	$.jelect.plugins.custom = {
+		init: function () {
+			console.log('custom plugin init event');
+		},
+		beforeOpen: function () {
+			console.log('custom plugin beforeOpen event');
+		},
+		afterOpen: function () {
+			console.log('custom plugin afterOpen event');
+		},
+		change: function () {
+			console.log('custom plugin change event');
+		},
+		clickOutside: function () {
+			console.log('custom plugin clickOutside event');
+		}
+	};
+
+	// apply plugin for single jelect
+	$('#jelect').jelect({
+		plugins: [
+			'custom'
+		]
+	});
 ```
 
 ### Default Options
